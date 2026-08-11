@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "adaptive-agent-memory"
+version = "0.2.0"
+description = "Open-source experience memory for AI agents"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Xarksus"}]
+license = {text = "MIT"}
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
