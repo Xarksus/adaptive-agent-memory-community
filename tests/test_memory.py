@@ -24,6 +24,23 @@ def test_record_recall_and_stats(tmp_path):
     assert stats["average_success"] == 1.0
 
 
+def test_recall_zero_limit_returns_no_matches(tmp_path):
+    memory = AdaptiveMemory(tmp_path / "memory.db")
+    memory.record(
+        Experience(
+            context="Need weather for Berlin",
+            action="weather_tool",
+            expected_outcome="temperature",
+            actual_outcome="21 C and rain",
+            success=1.0,
+            tags=["weather"],
+        )
+    )
+
+    assert memory.recall("weather", limit=0) == []
+    assert memory.recall("weather", limit=-1) == []
+
+
 def test_validation_rejects_invalid_success(tmp_path):
     memory = AdaptiveMemory(tmp_path / "memory.db")
     exp = Experience(
