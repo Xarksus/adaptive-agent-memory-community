@@ -25,6 +25,25 @@ jobs:
           test ! -f COMMERCIAL.md
       - name: Privacy scan public content
         run: |
-          ! grep -RniE 'Kira|Thorsten|\.kira|\.config/kira|OpenRouter|Gemini|PayPal' . --exclude-dir=.git --exclude='*.pyc'
-          ! grep -RniE '(password|api[_-]?key|access[_-]?token|auth[_-]?token|refresh[_-]?token|client[_-]?secret)[[:space:]]*=[[:space:]]*["'"'][^"'"']+' src tests --exclude='*.pyc'
+          ! grep -RniE 'Kira|Thorsten|\.kira|\.config/kira|OpenRouter|Gemini|PayPal' . --exclude-dir=.git --exclude='tests.yml' --exclude='*.pyc'
+          python - <<'PY'
+          import pathlib, re
+          pattern = re.compile(r'(?i)\b(password|api[_-]?key|access[_-]?token|auth[_-]?token|refresh[_-]?token|client[_-]?secret)\b\s*=\s*[^\s#]+')
+          leaks = []
+          for root in ('src', 'tests', 'examples'):
+              base = pathlib.Path(root)
+              if not base.exists():
+                  continue
+              for path in base.rglob('*'):
+                  if not path.is_file() or path.suffix == '.pyc':
+                      continue
+                  try:
+                      text = path.read_text(encoding='utf-8')
+                  except UnicodeDecodeError:
+                      continue
+                  if pattern.search(text):
+                      leaks.append(str(path))
+          if leaks:
+              raise SystemExit('Potential secret assignment found: ' + ', '.join(leaks))
+          PY
           test -z "$(find . -path './.git' -prune -o -type f \( -name '.env' -o -name '*.pem' -o -name '*.key' \) -print)"
