@@ -51,16 +51,10 @@ The paid Pro layer adds **experience-to-decision learning** rather than only mem
 - global action-performance analytics
 - future advanced ranking and migration tooling
 
-Current target pricing: **EUR 49 Indie / EUR 99 Commercial**.
-
-See [PRO.md](PRO.md) for the feature split and how to start a Pro license inquiry.
-
-## Contributing and security
-
-Contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md). Please read [SECURITY.md](SECURITY.md) before reporting sensitive issues.
+Current target pricing: EUR 49 Indie / EUR 99 Commercial.
 
 ## License
 
 Community edition: MIT License.
 
-The Pro package is separate proprietary software and is not part of this repository.
+The Pro package is separate proprietary software and is not part of the Community export.
