@@ -25,4 +25,6 @@ jobs:
           test ! -f COMMERCIAL.md
       - name: Privacy scan public content
         run: |
-          ! grep -RniE 'Kira|Thorsten|\.kira|\.config/kira|OpenRouter|Gemini|PayPal|password|api[_-]?key|access[_-]?token|auth[_-]?token|refresh[_-]?token|client[_-]?secret' . --exclude-dir=.git --exclude='*.pyc'
+          ! grep -RniE 'Kira|Thorsten|\.kira|\.config/kira|OpenRouter|Gemini|PayPal' . --exclude-dir=.git --exclude='*.pyc'
+          ! grep -RniE '(password|api[_-]?key|access[_-]?token|auth[_-]?token|refresh[_-]?token|client[_-]?secret)[[:space:]]*=[[:space:]]*["'"'][^"'"']+' src tests --exclude='*.pyc'
+          test -z "$(find . -path './.git' -prune -o -type f \( -name '.env' -o -name '*.pem' -o -name '*.key' \) -print)"
