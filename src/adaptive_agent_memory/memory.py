@@ -103,6 +103,9 @@ class AdaptiveMemory:
         )
 
     def recall(self, query: str, limit: int = 5) -> list[MemoryMatch]:
+        if limit <= 0:
+            return []
+
         query_tokens = _tokens(query)
         with self._connect() as conn:
             rows = conn.execute(
@@ -134,7 +137,7 @@ class AdaptiveMemory:
                 matches.append(MemoryMatch(exp, relevance, score))
 
         matches.sort(key=lambda m: m.score, reverse=True)
-        return matches[: max(1, limit)]
+        return matches[:limit]
 
     def advise(self, query: str, limit: int = 3) -> str:
         matches = self.recall(query, limit=limit)
