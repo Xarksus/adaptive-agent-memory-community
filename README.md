@@ -1,60 +1,69 @@
-# Adaptive Agent Memory Community
+# Adaptive Agent Memory
 
-Adaptive Agent Memory Community is the open-source core of Adaptive Agent Memory.
+AI agents need more than a rolling chat history — they need structured, searchable, scoreable, and persistent memory.
 
-It gives Python AI agents a lightweight local **experience memory**: store what happened, score outcomes, recall similar prior experiences, and inspect simple statistics before choosing a new action.
+Adaptive Agent Memory provides a robust, lightweight memory system for AI agents, allowing them to recall relevant information efficiently based on relevance, quality, and recency, solving the problem of context window limits and irrelevant context retrieval.
 
-## Community features
+[![PyPI version](https://img.shields.io/pypi/v/adaptive-agent-memory)](https://pypi.org/project/adaptive-agent-memory/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Tests](https://github.com/adaptive-agent-memory/adaptive-agent-memory-community/actions/workflows/ci.yml/badge.svg)](https://github.com/adaptive-agent-memory/adaptive-agent-memory-community/actions/workflows/ci.yml)
 
-- dependency-free Python core
-- SQLite persistence
-- experience recording
-- success and prediction-error tracking
-- relevance + recency retrieval
-- advisory summaries
-- basic statistics
-- JSON export
-
-## Quick start
+## Installation
 
 ```bash
-pip install -e .
+pip install adaptive-agent-memory
 ```
+
+## Why not just use chat history?
+
+Dumping the entire chat history into your LLM prompt scales terribly. It wastes tokens, dilutes context, and lacks structure. 
+
+Adaptive Agent Memory provides:
+*   **Structured:** Data is stored with metadata, not just raw text.
+*   **Searchable:** Find exact or semantically similar memories.
+*   **Scoreable:** Memories are ranked dynamically.
+*   **Persistent:** Long-term storage beyond a single session.
+
+## Quickstart
 
 ```python
-from adaptive_agent_memory import AdaptiveMemory, Experience
+from adaptive_memory import MemorySystem
 
-memory = AdaptiveMemory("agent_memory.db")
-memory.record(
-    Experience(
-        context="Need weather for Berlin",
-        action="weather_tool",
-        expected_outcome="current weather",
-        actual_outcome="21 C and rain",
-        success=1.0,
-        tags=["weather", "tool"],
-    )
-)
+memory = MemorySystem()
+memory.add("User's favorite color is blue", tags=["user_pref"])
 
-print(memory.recall("weather Hamburg"))
-print(memory.stats())
+# Later, when the agent needs context:
+relevant_memories = memory.retrieve(query="What does the user like?", top_k=1)
+print(relevant_memories[0].content) # Output: User's favorite color is blue
 ```
 
-## Pro edition
+## How it works
 
-The paid Pro layer adds **experience-to-decision learning** rather than only memory storage:
+Retrieval isn't just about semantic similarity. We use a composite scoring formula to surface the most useful memories:
 
-- action recommendations from prior outcomes
-- adaptive weighting from success/failure and prediction error
-- candidate-action filtering
-- confidence estimates
-- global action-performance analytics
-- future advanced ranking and migration tooling
+`Score = (Relevance * W_rel) + (Quality * W_qual) + (Recency * W_rec)`
 
-Current target pricing: EUR 49 Indie / EUR 99 Commercial.
+*   **Relevance:** How well the memory matches the query (e.g., embeddings, BM25).
+*   **Quality:** How useful the memory has proven to be in the past (reinforcement).
+*   **Recency:** How new the memory is (with configurable decay).
+
+## Community vs Pro
+
+| Feature | Community | Pro |
+| :--- | :--- | :--- |
+| Core Memory Storage | ✅ | ✅ |
+| Basic Retrieval | ✅ | ✅ |
+| Local Persistence (JSON/SQLite) | ✅ | ✅ |
+| Advanced Embeddings & Vector DBs | ❌ | ✅ |
+| Multi-Agent Shared Memory | ❌ | ✅ |
+| Dynamic Memory Consolidation | ❌ | ✅ |
+| Cloud Sync & Enterprise Auth | ❌ | ✅ |
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 
-Community edition: MIT License.
-
-The Pro package is separate proprietary software and is not part of the Community export.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

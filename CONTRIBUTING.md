@@ -1,19 +1,26 @@
-# Contributing
+# Contributing to Adaptive Agent Memory
 
-Thanks for your interest in Adaptive Agent Memory Community.
+We love your input! We want to make contributing to this project as easy and transparent as possible.
 
-## Development
+## Workflow
 
-1. Use Python 3.10 or newer.
-2. Install the package in editable mode: `pip install -e . pytest`.
-3. Run tests with `pytest -q`.
-4. Keep the Community edition dependency-free unless a new dependency has a strong justification.
-5. Add or update tests for behavior changes.
+1. Fork the repo and create your branch from `main`.
+2. Make your changes and commit them.
+3. Ensure the tests pass.
+4. Issue that pull request!
 
-## Scope
+## Testing
 
-This public repository contains only the MIT-licensed Community edition. Proprietary Pro features are developed separately and should not be submitted here.
+All tests must pass before a PR can be merged. Run tests locally using:
 
-## Pull requests
+```bash
+pytest tests/ -v
+```
 
-Keep changes focused, explain the problem being solved, and include tests where applicable.
+## Code Style
+
+We use standard Python conventions. There are no strict external formatters prescribed, but please try to keep your code clean and readable, following PEP 8 where reasonable.
+
+## Issues
+
+Issues are welcome! If you find a bug or have a feature request, please open an issue in the tracker.
